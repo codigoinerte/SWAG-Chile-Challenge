@@ -11,6 +11,14 @@ const ProductList = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('name')
 
+  /* standarize string to search */
+  const normalizeString = (str: string) => {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+  }
+
   // Filter and sort products based on criteria
   const filterProducts = (category: string, search: string, sort: string) => {
     let filtered = [...allProducts]
@@ -23,8 +31,8 @@ const ProductList = () => {
     // Search filter
     if (search) {
       filtered = filtered.filter(product => 
-        product.name.includes(search) ||
-        product.sku.includes(search)
+        (normalizeString(product.name)).includes(normalizeString(search)) ||
+        (normalizeString(product.sku)).includes(normalizeString(search))
       )
     }
 
