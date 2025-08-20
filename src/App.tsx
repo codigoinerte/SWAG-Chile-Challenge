@@ -8,13 +8,14 @@ import ProductDetail from './pages/ProductDetail'
 import { CartPage } from './pages/CartPage'
 import { QuotePage } from './pages/QuotePage'
 import './App.css'
-// import './transitions.css' // Ya no es necesario con Framer Motion
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   const location = useLocation();
 
   return (
     <div className="App">
+      <Toaster position="top-right" />
       <Header />
       <main>
         <AnimatePresence mode="wait">

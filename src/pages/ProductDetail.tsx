@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react'
+import { toast } from 'react-hot-toast'
 import { useParams, Link } from 'react-router-dom'
 import { products } from '../data/products'
 import { Product } from '../types/Product'
@@ -33,7 +34,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addItem(product, quantity, selectedColor, selectedSize);
-      alert(`${quantity} ${product.name} se ha(n) añadido al carrito.`);
+      toast.success(`¡${quantity} ${product.name} añadido${quantity > 1 ? 's' : ''} al carrito!`);
     }
   };
 
@@ -203,7 +204,7 @@ const ProductDetail = () => {
                 
                 <button 
                   className="btn btn-secondary cta1"
-                  onClick={() => alert('Función de cotización por implementar')}
+                  onClick={() => toast('Función de cotización por implementar', {icon: '🛠️'})}
                 >
                   <span className="material-icons">calculate</span>
                   Solicitar cotización

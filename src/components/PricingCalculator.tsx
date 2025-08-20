@@ -4,6 +4,7 @@ import { useQuoteStore } from '../store/quoteStore'
 import { useNavigate } from 'react-router-dom'
 import { Product } from '../types/Product'
 import { FormatPrice } from '../helpers/FormatPrice';
+import { toast } from 'react-hot-toast'
 import './PricingCalculator.css'
 interface PricingCalculatorProps {
   product: Product;
@@ -169,7 +170,8 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
             className="btn btn-secondary cta1"
             onClick={() => {
               addQuoteItem(product, quantity, selectedColor, selectedSize);
-              navigate('/cotizador');
+              toast('¡Cotización añadida! Redirigiendo...', {icon: '📄'});
+              setTimeout(() => navigate('/cotizador'), 1200);
             }}
           >
             <span className="material-icons">email</span>
@@ -180,7 +182,7 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
             className="btn btn-primary cta1"
             onClick={() => {
               addItem(product, quantity, selectedColor, selectedSize);
-              alert(`${quantity} ${product.name} se ha(n) añadido al carrito.`);
+              toast.success(`¡${quantity} ${product.name} añadido${quantity > 1 ? 's' : ''} al carrito!`);
             }}
           >
             <span className="material-icons">shopping_cart</span>
