@@ -1,5 +1,6 @@
 
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { useCartStore } from '../store/cartStore'
 import './Header.css'
 
@@ -7,6 +8,8 @@ import './Header.css'
 const Header = () => {
   const { getTotalItems } = useCartStore();
   const totalItems = getTotalItems();
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <header className="header no-print">
@@ -33,6 +36,26 @@ const Header = () => {
             </Link>
           </nav>
 
+          {/* Hamburguesa Mobile */}
+          
+          {menuOpen && (
+            <div className="mobile-menu">
+              <Link to="/" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                <span className="material-icons">home</span> Inicio
+              </Link>
+              <Link to="/" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                <span className="material-icons">category</span> Productos
+              </Link>
+              <Link to="/cotizador" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                <span className="material-icons">calculate</span> Cotización
+              </Link>
+              <Link to="/cart" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                <span className="material-icons">shopping_cart</span> Carrito
+                {totalItems > 0 && <span className="cart-counter">{totalItems}</span>}
+              </Link>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="header-actions">
             <button className="btn btn-secondary cta1">
@@ -40,6 +63,11 @@ const Header = () => {
               Iniciar Sesión
             </button>
           </div>
+
+          <button className="hamburger-menu" aria-label="Abrir menú" onClick={() => setMenuOpen(!menuOpen)}>
+            <span className="material-icons">menu</span>
+          </button>
+
         </div>
       </div>
     </header>
