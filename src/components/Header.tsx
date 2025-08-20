@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom'
 import { useCartStore } from '../store/cartStore'
 import './Header.css'
 
+
 const Header = () => {
   const { getTotalItems } = useCartStore();
   const totalItems = getTotalItems();
 
   return (
-    <header className="header">
+    <header className="header no-print">
       <div className="container">
         <div className="header-content">
           {/* Logo */}
@@ -28,16 +29,12 @@ const Header = () => {
             <Link to="/cart" className="nav-link l1">
               <span className="material-icons">shopping_cart</span>
               Carrito
-              ({totalItems > 0 && totalItems})
+              {totalItems > 0 && <span className="cart-counter">{totalItems}</span>}
             </Link>
           </nav>
 
           {/* Actions */}
           <div className="header-actions">
-            <Link to="/cart" className="cart-mobile">
-              <span className="material-icons">shopping_cart</span>             
-              ({totalItems > 0 && totalItems})
-            </Link>
             <button className="btn btn-secondary cta1">
               <span className="material-icons">person</span>
               Iniciar Sesión
@@ -48,5 +45,6 @@ const Header = () => {
     </header>
   )
 }
+
 
 export default Header

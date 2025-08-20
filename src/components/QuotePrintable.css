@@ -1,0 +1,126 @@
+
+/* Estilos para el componente imprimible */
+.printable-container {
+    width: 210mm; /* Ancho A4 */
+    min-height: 297mm; /* Alto A4 */
+    margin: 0 auto;
+    background: white;
+    color: #333;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+.printable-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.printable-header h1 {
+    font-size: 24px;
+    color: #000;
+    margin: 0;
+}
+
+.company-details {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.company-details h2 {
+    font-size: 16px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.items-table {
+    margin-bottom: 30px;
+}
+
+.items-table h2 {
+    font-size: 16px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.items-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.items-table th, .items-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.items-table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+.printable-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+}
+
+.printable-footer .summary {
+    text-align: right;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.printable-footer .terms {
+    font-size: 10px;
+    color: #777;
+}
+
+/* Asegurarse de que el logo se muestre correctamente en la impresión */
+.logo-placeholder{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+.logo-placeholder img {
+    max-width: 150px;
+    height: auto;
+}
+.logo-placeholder .material-icons {
+    width: 40px;
+    height: 40px;    
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: #000;
+    background-color: #000;
+
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+}
+.logo-placeholder .text{
+    color: #000 !important;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.6;
+}
