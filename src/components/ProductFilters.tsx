@@ -2,6 +2,8 @@ import { categories, suppliers } from '../data/products'
 import './ProductFilters.css'
 
 interface ProductFiltersProps {
+  selectedPriceFrom: number
+  selectedPriceTo: number
   selectedCategory: string
   searchQuery: string
   sortBy: string
@@ -10,17 +12,25 @@ interface ProductFiltersProps {
   onCategoryChange: (category: string) => void
   onSearchChange: (search: string) => void
   onSortChange: (sort: string) => void
+  onChangePriceFrom: (price: number) => void
+  onChangePriceTo: (price:number) => void
+  onChangeReset:(isreset:boolean) => void
 }
 
 const ProductFilters = ({
+  selectedPriceFrom,
+  selectedPriceTo,
   selectedSupplier,
   selectedCategory,
   searchQuery,
   sortBy,
+  onChangePriceFrom,
+  onChangePriceTo,
   onSupplierChange,
   onCategoryChange,
   onSearchChange,
-  onSortChange
+  onSortChange,
+  onChangeReset
 }: ProductFiltersProps) => {
   return (
     <div className="product-filters">
@@ -84,15 +94,52 @@ const ProductFilters = ({
           <h3 className="filter-title p1-medium">Proveedores</h3>
           <div className="supplier-list">
             {suppliers.map(supplier => (
-              <div key={supplier.id} className={`supplier-item ${selectedSupplier == supplier.id ? 'active' : ''}`} onClick={() => onSupplierChange(supplier.id)}>
+              <div key={supplier.id} className={`supplier-item ${supplier.id === selectedSupplier ? 'active' : ''}`} onClick={() => onSupplierChange(supplier.id)}>
                 <span className="supplier-name l1">{supplier.name}</span>
                 <span className="supplier-count l1">{supplier.products}</span>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Filtrado de rango de precios */}
+        <div className="filter-section">
+          <h3 className="filter-title p1-medium">Precio</h3>
+          <div className="prices-filter">
+            <div className="price-filter"></div>
+              <input
+                type="number"
+                placeholder="Desde"
+                min={0}
+                className="price-input p1"
+                onChange={e => onChangePriceFrom(Number(e.target.value))}
+                value={selectedPriceFrom > 0 ? selectedPriceFrom : ''}
+              />
+              <span className="price-separator">-</span>
+              <input
+                type="number"
+                placeholder="Hasta"
+                min={0}
+                className="price-input p1"
+                onChange={e => onChangePriceTo(Number(e.target.value))}
+                value={selectedPriceTo > 0 ? selectedPriceTo : ''}
+              />
+            </div>
+          </div>
+          {/* Botón de reset */}
+          <div className="filter-section">
+            <button
+              className="reset-btn btn btn-primary cta1 "
+              onClick={() => onChangeReset(true)}
+              type="button"
+            >
+              <span className="material-icons">restart_alt</span>
+              <span className="reset-text">Restablecer filtros</span>
+            </button>
+          </div>
+
+        </div>
       </div>
-    </div>
   )
 }
 

@@ -5,12 +5,24 @@ import { products as allProducts } from '../data/products'
 import { Product } from '../types/Product'
 import './ProductList.css'
 
+interface FilterProducts {
+  category: string;
+  search: string;
+  sort: string;
+  supplierFilter: string;
+  priceFrom: number;
+  priceTo: number;
+}
+
 const ProductList = () => {
   const [supplierFilter, setSupplierFilter] = useState('all');
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProducts)
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState('name')
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProducts);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+
+  const [priceFrom, setPriceFrom] = useState(0);
+  const [priceTo, setPriceTo] = useState(0);
 
   /* standarize string to search */
   const normalizeString = (str: string) => {
@@ -21,7 +33,15 @@ const ProductList = () => {
   }
 
   // Filter and sort products based on criteria
-  const filterProducts = (category: string, search: string, sort: string, supplierFilter:string) => {
+  const filterProducts = ({
+      category,
+      search,
+      sort,
+      supplierFilter,
+      priceFrom,
+      priceTo
+   }: FilterProducts) => {
+
     let filtered = [...allProducts]
 
     // Category filter
@@ -54,32 +74,121 @@ const ProductList = () => {
         break
     }
 
-    filtered = filtered.filter((product) => product.supplier === supplierFilter);
+    if(supplierFilter != 'all')
+      filtered = filtered.filter((product) => product.supplier === supplierFilter);
 
-    console.log(filtered);
+    if (!(priceFrom === 0 && priceTo === 0)) {
+      filtered = filtered.filter(product => {
+        const price = product.basePrice;
+        if (priceFrom !== 0 && priceTo !== 0) {
+          return price >= priceFrom && price <= priceTo;
+        }
+        if (priceFrom !== 0) {
+          return price >= priceFrom;
+        }
+        if (priceTo !== 0) {
+          return price <= priceTo;
+        }
+        return true;
+      });
+    }
+
+    
 
     setFilteredProducts(filtered)
   }
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
-    filterProducts(category, searchQuery, sortBy, supplierFilter)
+    filterProducts({
+      category,
+      search:searchQuery,
+      sort: sortBy,
+      supplierFilter,
+      priceFrom,
+      priceTo
+    })
   }
 
   const handleSearchChange = (search: string) => {
     setSearchQuery(search)
-    filterProducts(selectedCategory, search, sortBy, supplierFilter)
+    filterProducts({
+      category: selectedCategory,
+      search,
+      sort: sortBy,
+      supplierFilter,
+      priceFrom,
+      priceTo
+    })
   }
 
   const handleSortChange = (sort: string) => {
     setSortBy(sort)
-    filterProducts(selectedCategory, searchQuery, sort, supplierFilter)
+    filterProducts({
+      category: selectedCategory,
+      search: searchQuery,
+      sort,
+      supplierFilter,
+      priceFrom,
+      priceTo
+    })
   }
 
   const handleSupplierChange = (supplier: string) => {
     setSupplierFilter(supplier);
-    filterProducts(selectedCategory, searchQuery, sortBy, supplier)
+    filterProducts({
+      category: selectedCategory,
+      search: searchQuery,
+      sort: sortBy,
+      supplierFilter: supplier,
+      priceFrom,
+      priceTo
+    })
   }
+
+  const handlePriceFrom = (priceFrom:number) => {
+    setPriceFrom(priceFrom);
+    filterProducts({
+      category: selectedCategory,
+      search: searchQuery,
+      sort: sortBy,
+      supplierFilter,
+      priceFrom,
+      priceTo
+    })
+  }
+
+  const handlePriceTo = (priceTo:number) => {
+    setPriceTo(priceTo);
+    filterProducts({
+      category: selectedCategory,
+      search: searchQuery,
+      sort: sortBy,
+      supplierFilter,
+      priceFrom,
+      priceTo
+    })
+  } 
+
+  const setReset = () => {
+      filterProducts({
+        category: 'all',
+        search: '',
+        sort: 'sortBy',
+        supplierFilter: 'all',
+        priceFrom: 0,
+        priceTo: 0
+      });
+
+    setSupplierFilter('all');
+    setSelectedCategory('all');
+    setSearchQuery('');
+    setSortBy('name');
+    setPriceFrom(0);
+    setPriceTo(0);
+  }
+
+  const handleReset = (isReset:boolean) =>  (isReset) && setReset();
 
   return (
     <div className="product-list-page">
@@ -107,6 +216,8 @@ const ProductList = () => {
 
         {/* Filters */}
         <ProductFilters
+          selectedPriceFrom={priceFrom}
+          selectedPriceTo={priceTo}
           selectedSupplier={supplierFilter}
           selectedCategory={selectedCategory}
           searchQuery={searchQuery}
@@ -115,6 +226,9 @@ const ProductList = () => {
           onCategoryChange={handleCategoryChange}
           onSearchChange={handleSearchChange}
           onSortChange={handleSortChange}
+          onChangePriceFrom={handlePriceFrom}
+          onChangePriceTo={handlePriceTo}
+          onChangeReset={handleReset}
         />
 
         {/* Products Grid */}
@@ -126,11 +240,7 @@ const ProductList = () => {
               <p className="p1">No se encontraron productos que coincidan con tu búsqueda.</p>
               <button 
                 className="btn btn-primary cta1"
-                onClick={() => {
-                  setSearchQuery('')
-                  setSelectedCategory('all')
-                  filterProducts('all', '', sortBy, 'all')
-                }}
+                onClick={setReset}
               >
                 Ver todos los productos
               </button>

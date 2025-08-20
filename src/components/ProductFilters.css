@@ -119,7 +119,8 @@
 }
 
 /* Sort Select */
-.sort-select {
+.sort-select,
+.price-input {
   width: 100%;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -129,7 +130,8 @@
   cursor: pointer;
 }
 
-.sort-select:focus {
+.sort-select:focus,
+.price-input:focus {
   outline: none;
   border-color: #667eea;
   background: white;
@@ -171,6 +173,17 @@
   background-color: #1a1a1a;
   color: #f1f5f9;
 }
+
+.prices-filter{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.price-separator{
+  padding: 1rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .filters-card {
@@ -199,5 +212,15 @@
   
   .category-btn {
     justify-content: flex-start;
+  }
+
+  .prices-filter{
+    flex-direction: column;
+  }
+  .price-separator{
+    display: none;
+  }
+  .price-separator + input{
+    margin-top: 1rem;
   }
 }
