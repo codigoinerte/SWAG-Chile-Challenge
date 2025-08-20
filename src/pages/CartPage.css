@@ -29,14 +29,6 @@
     border-radius: 8px;
     align-items: center;
 }
-
-.cart-item-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    margin-right: 1rem;
-}
-
 .cart-item-details {
     flex-grow: 1;
 }
@@ -60,6 +52,30 @@
 .cart-item-quantity input {
     width: 50px;
     text-align: center;
+}
+
+.cart-item-pricing {
+    margin: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+}
+
+.discount-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.savings-amount {
+    font-size: 0.9rem;
+    color: #28a745;
+    font-weight: bold;
+    margin-top: 0.5rem;
 }
 
 .cart-item-price {
@@ -129,6 +145,10 @@
     background: #f8fafc;
 }
 
+.cart-item-image {
+    margin-right: 1rem;       
+}
+
 @media(max-width:991px){
     .cart-grid{
         display: flex;
@@ -153,5 +173,8 @@
     .cart-item .btn-cart{
         width: 100%;
         margin-bottom: 1rem;
+    }
+    .cart-item-image {
+        margin-bottom: 1rem;       
     }
 }

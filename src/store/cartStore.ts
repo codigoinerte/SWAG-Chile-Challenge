@@ -21,19 +21,21 @@ interface CartState {
   getCartTotal: () => number;
 }
 
-// Función para calcular el precio basado en la cantidad (considerando descuentos)
-const getPriceForQuantity = (item: CartItem): number => {
+// Función HELPER para obtener el precio y descuento basado en la cantidad
+export const getPricingInfoForQuantity = (item: CartItem): { unitPrice: number, discount?: number } => {
   const { priceBreaks, basePrice, quantity } = item;
   if (!priceBreaks || priceBreaks.length === 0) {
-    return basePrice;
+    return { unitPrice: basePrice };
   }
 
-  // Ordenamos los priceBreaks de mayor a menor para encontrar el correcto
   const sortedBreaks = [...priceBreaks].sort((a, b) => b.minQty - a.minQty);
-  
   const applicableBreak = sortedBreaks.find(br => quantity >= br.minQty);
 
-  return applicableBreak ? applicableBreak.price : basePrice;
+  if (applicableBreak) {
+    return { unitPrice: applicableBreak.price, discount: applicableBreak.discount };
+  }
+
+  return { unitPrice: basePrice };
 };
 
 
@@ -103,8 +105,8 @@ export const useCartStore = create<CartState>()(
       // Selector para obtener el precio total del carrito
       getCartTotal: () => {
         return get().items.reduce((total, item) => {
-          const itemPrice = getPriceForQuantity(item);
-          return total + itemPrice * item.quantity;
+          const { unitPrice } = getPricingInfoForQuantity(item);
+          return total + unitPrice * item.quantity;
         }, 0);
       },
     }),

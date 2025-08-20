@@ -1,5 +1,6 @@
 
-import { useCartStore } from '../store/cartStore';
+
+import { useCartStore, getPricingInfoForQuantity } from '../store/cartStore';
 import { Link } from 'react-router-dom';
 import { FormatPrice } from '../helpers/FormatPrice';
 import './CartPage.css';
@@ -20,61 +21,81 @@ export const CartPage = () => {
   }
 
   return (
-    <div className="container">
-      <div className="pricing-section">
-        <div className='calculator-header'>
-          <h3>Tu Carrito de Compras</h3>
-        </div>
-        <div className="cart-grid calculator-content">
-          <div className="items-container">
-            {items.map(item => (
-              <div key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="cart-item">
-                <div className="image-placeholder thumbnail cart-item-image">
-                  <span className="material-icons">image</span>
+
+        <div className="container">
+          <div className="pricing-section">
+          
+            
+              <div className='calculator-header'>
+                <h3>Tu Carrito de Compras</h3>
+              </div>
+              <div className="cart-grid calculator-content">
+                <div className="items-container">
+                  {items.map(item => {
+                    const { unitPrice, discount } = getPricingInfoForQuantity(item);
+                    const savings = (item.basePrice - unitPrice) * item.quantity;
+                    return (
+                      <div key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="cart-item">
+                        <div className="image-placeholder thumbnail cart-item-image">
+                          <span className="material-icons">image</span>
+                        </div>
+                        <div className="cart-item-details">
+                          <h3 className="cart-item-name">{item.name}</h3>
+                          <div className="cart-item-options">
+                            {item.selectedColor && <p>Color: {item.selectedColor}</p>}
+                            {item.selectedSize && <p>Talla: {item.selectedSize}</p>}
+                          </div>
+                          <div className="cart-item-pricing">
+                            <span>Precio Unitario: {FormatPrice(unitPrice)}</span>
+                            {discount && <span className="discount-badge">{discount}% OFF</span>}
+                          </div>
+                          {savings > 0 && (
+                            <div className="savings-amount">
+                              <span>Ahorro: {FormatPrice(savings)}</span>
+                            </div>
+                          )}
+                          <div className="cart-item-quantity">
+                            <span>Cantidad:</span>
+                            <input 
+                              type="number" 
+                              min="1" 
+                              value={item.quantity} 
+                              onChange={(e) => updateItemQuantity(item.id, parseInt(e.target.value), item.selectedColor, item.selectedSize)}
+                              className="quantity-input p1"
+                            />
+                          </div>
+                          <button onClick={() => removeItem(item.id, item.selectedColor, item.selectedSize)} className="btn-cart btn-cart-danger">
+                            Eliminar
+                          </button>
+                        </div>
+                        <div className="cart-item-price">
+                          {FormatPrice(unitPrice * item.quantity)}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                <div className="cart-item-details">
-                  <h3 className="cart-item-name">{item.name}</h3>
-                  <div className="cart-item-options">
-                    {item.selectedColor && <p>Color: {item.selectedColor}</p>}
-                    {item.selectedSize && <p>Talla: {item.selectedSize}</p>}
+
+                <div className="cart-summary">
+                  <h2 className="cart-summary-title">Resumen del Pedido</h2>
+                  <div className="cart-summary-row">
+                    <span>Subtotal ({getTotalItems()} productos):</span>
+                    <span>{FormatPrice(getCartTotal())}</span>
                   </div>
-                  <div className="cart-item-quantity">
-                    <span>Cantidad:</span>
-                    <input 
-                      className='quantity-input p1'
-                      type="number" 
-                      min="1" 
-                      value={item.quantity} 
-                      onChange={(e) => updateItemQuantity(item.id, parseInt(e.target.value), item.selectedColor, item.selectedSize)}
-                    />
+                  <div className="cart-summary-row cart-summary-total">
+                    <span>Total:</span>
+                    <span>{FormatPrice(getCartTotal())}</span>
                   </div>
-                  <button onClick={() => removeItem(item.id, item.selectedColor, item.selectedSize)} className="btn-cart btn-cart-danger">
-                    Eliminar
+                  <button className="btn-checkout" onClick={() => alert('Redirigiendo a la pasarela de pago...')}>
+                    Proceder al Pago
                   </button>
                 </div>
-                <div className="cart-item-price">
-                  {FormatPrice(item.basePrice * item.quantity)}
-                </div>
               </div>
-            ))}
-          </div>
+            
 
-          <div className="cart-summary">
-            <h2 className="cart-summary-title">Resumen del Pedido</h2>
-            <div className="cart-summary-row">
-              <span>Subtotal ({getTotalItems()} productos):</span>
-              <span>{FormatPrice(getCartTotal())}</span>
-            </div>
-            <div className="cart-summary-row cart-summary-total">
-              <span>Total:</span>
-              <span>{FormatPrice(getCartTotal())}</span>
-            </div>
-            <button className="btn-checkout" onClick={() => alert('Redirigiendo a la pasarela de pago...')}>
-              Proceder al Pago
-            </button>
           </div>
         </div>
-      </div>
-    </div>
+
   );
 };
+
