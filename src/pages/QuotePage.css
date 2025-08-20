@@ -1,0 +1,63 @@
+
+.quote-company-form {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.quote-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.quote-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.print-only {
+    display: none; /* Oculto por defecto */
+}
+
+/* Estilos para impresión */
+@media print {
+    /* Oculta todo lo que tenga la clase no-print */
+    .no-print {
+        display: none !important;
+    }
+
+    /* Muestra solo lo que tenga la clase print-only */
+    .print-only {
+        display: block !important;
+        /* Asegura que ocupe todo el espacio de la página */
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Ajusta el contenedor principal para la impresión */
+    .cart-container {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    /* Asegura que el cuerpo de la página no tenga márgenes no deseados */
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}

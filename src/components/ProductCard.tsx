@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom'
+
+import { Link, useNavigate } from 'react-router-dom'
 import { Product } from '../types/Product'
 import { FormatPrice } from '../helpers/FormatPrice';
+import { useQuoteStore } from '../store/quoteStore'; // Importar el store del cotizador
 import './ProductCard.css'
 
 interface ProductCardProps {
@@ -8,6 +10,15 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const navigate = useNavigate();
+  const { addItem } = useQuoteStore();
+
+  const handleQuoteClick = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevenir la navegación del Link padre
+    addItem(product, 1); // Añadir 1 unidad por defecto
+    navigate('/cotizador'); // Redirigir a la página de cotización
+  };
+
   // Handle product status display
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -112,13 +123,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </div>
 
+        {/* Cotizar */}
         <div className="card-actions">
           <button 
             className="btn btn-secondary l1"
-            onClick={(e) => {
-              e.preventDefault()
-              alert('Función de cotización por implementar')
-            }}
+            onClick={handleQuoteClick}
           >
             <span className="material-icons">calculate</span>
             Cotizar
