@@ -9,7 +9,9 @@ interface ProductCardProps {
   product: Product
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+import React from 'react';
+
+const ProductCard = React.memo(({ product }: ProductCardProps) => {
   const navigate = useNavigate();
   const { addItem } = useQuoteStore();
 
@@ -59,7 +61,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Product Image */}
         <div className="product-image">
           {/* Bug: no real image handling */}
-          <div className="image-placeholder">
+          <div className="image-placeholder" aria-label="Imagen de producto" role="img">
             <span className="material-icons">image</span>
           </div>
           
@@ -128,14 +130,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <button 
             className="btn btn-secondary l1"
             onClick={handleQuoteClick}
+            aria-label={`Cotizar ${product.name}`}
           >
-            <span className="material-icons">calculate</span>
+            <span className="material-icons" aria-hidden="true">calculate</span>
             Cotizar
           </button>
         </div>
       </div>
     </div>
   )
-}
+})
 
 export default ProductCard

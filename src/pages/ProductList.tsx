@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import ProductCard from '../components/ProductCard'
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductFilters from '../components/ProductFilters'
@@ -36,73 +36,59 @@ const ProductList = () => {
 
   // Filter and sort products based on criteria
   const filterProducts = ({
-      category,
-      search,
-      sort,
-      supplierFilter,
-      priceFrom,
-      priceTo
-   }: FilterProducts) => {
-
-  setIsLoading(true);
-  let filtered = [...allProducts]
-
-    // Category filter
-    if (category !== 'all') {
-      filtered = filtered.filter(product => product.category === category)
-    }
-
-    // Search filter
-    if (search) {
-      filtered = filtered.filter(product => 
-        (normalizeString(product.name)).includes(normalizeString(search)) ||
-        (normalizeString(product.sku)).includes(normalizeString(search))
-      )
-    }
-
-    // Sorting logic
-    switch (sort) {
-      case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name))
-        break
-      case 'price':
-        // Price sorting to implement
-        /* price sorting from lowest to highest */
-        filtered.sort((a,b) => a.basePrice - b.basePrice)
-        break
-      case 'stock':
-        filtered.sort((a, b) => b.stock - a.stock)
-        break
-      default:
-        break
-    }
-
-    if(supplierFilter != 'all')
-      filtered = filtered.filter((product) => product.supplier === supplierFilter);
-
-    if (!(priceFrom === 0 && priceTo === 0)) {
-      filtered = filtered.filter(product => {
-        const price = product.basePrice;
-        if (priceFrom !== 0 && priceTo !== 0) {
-          return price >= priceFrom && price <= priceTo;
-        }
-        if (priceFrom !== 0) {
-          return price >= priceFrom;
-        }
-        if (priceTo !== 0) {
-          return price <= priceTo;
-        }
-        return true;
-      });
-    }
-
-    
-
+    category,
+    search,
+    sort,
+    supplierFilter,
+    priceFrom,
+    priceTo
+  }: FilterProducts) => {
+    setIsLoading(true);
     setTimeout(() => {
-      setFilteredProducts(filtered)
+      let filtered = [...allProducts];
+      if (category !== 'all') {
+        filtered = filtered.filter(product => product.category === category);
+      }
+      if (search) {
+        filtered = filtered.filter(product =>
+          (normalizeString(product.name)).includes(normalizeString(search)) ||
+          (normalizeString(product.sku)).includes(normalizeString(search))
+        );
+      }
+      switch (sort) {
+        case 'name':
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'price':
+          filtered.sort((a, b) => a.basePrice - b.basePrice);
+          break;
+        case 'stock':
+          filtered.sort((a, b) => b.stock - a.stock);
+          break;
+        default:
+          break;
+      }
+      if (supplierFilter !== 'all')
+        filtered = filtered.filter((product) => product.supplier === supplierFilter);
+      if (!(priceFrom === 0 && priceTo === 0)) {
+        filtered = filtered.filter(product => {
+          const price = product.basePrice;
+          if (priceFrom !== 0 && priceTo !== 0) {
+            return price >= priceFrom && price <= priceTo;
+          }
+          if (priceFrom !== 0) {
+            return price >= priceFrom;
+          }
+          if (priceTo !== 0) {
+            return price <= priceTo;
+          }
+          return true;
+        });
+      }
+      setFilteredProducts(filtered);
       setIsLoading(false);
-    }, 500); // Simula retardo de carga
-  }
+    }, 500);
+  };
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
@@ -240,9 +226,11 @@ const ProductList = () => {
         {/* Products Grid */}
         <div className="products-section">
           {isLoading ? (
-            <LoadingSpinner message="Cargando productos..." />
+            <div role="alert">
+              <LoadingSpinner message="Cargando productos..." />
+            </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="empty-state">
+            <div className="empty-state" role="alert">
               <span className="material-icons">search_off</span>
               <h3 className="h2">No hay productos</h3>
               <p className="p1">No se encontraron productos que coincidan con tu búsqueda.</p>
