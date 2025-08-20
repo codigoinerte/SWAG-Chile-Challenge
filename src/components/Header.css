@@ -9,19 +9,45 @@
   margin-left: 12px;
 }
 
+/* Overlay para fondo oscuro */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.35);
+  z-index: 998;
+  transition: opacity 0.3s;
+}
+
+/* Menú hamburguesa animado desde la derecha */
+/* Animación para el menú hamburguesa */
+/* Menú hamburguesa animado solo con CSS */
 .mobile-menu {
-  position: absolute;
-  top: 64px;
-  right: 16px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 260px;
   background: #1a1a1a;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  padding: 16px 0;
+  border-radius: 12px 0 0 12px;
+  box-shadow: -2px 0 12px rgba(0,0,0,0.18);
+  padding: 32px 0 0 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
   z-index: 999;
   min-width: 180px;
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(.7,.3,.3,1), opacity 0.25s;
+}
+.mobile-menu.slide-in {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .mobile-link {

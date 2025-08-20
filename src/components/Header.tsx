@@ -32,28 +32,30 @@ const Header = () => {
             <Link to="/cart" className="nav-link l1">
               <span className="material-icons">shopping_cart</span>
               Carrito
-              {totalItems > 0 && <span className="cart-counter">{totalItems}</span>}
+              ({totalItems > 0 && <span className="cart-counter">{totalItems}</span>})
             </Link>
           </nav>
 
           {/* Hamburguesa Mobile */}
-          
           {menuOpen && (
-            <div className="mobile-menu">
-              <Link to="/" className="mobile-link" onClick={()=>setMenuOpen(false)}>
-                <span className="material-icons">home</span> Inicio
-              </Link>
-              <Link to="/" className="mobile-link" onClick={()=>setMenuOpen(false)}>
-                <span className="material-icons">category</span> Productos
-              </Link>
-              <Link to="/cotizador" className="mobile-link" onClick={()=>setMenuOpen(false)}>
-                <span className="material-icons">calculate</span> Cotización
-              </Link>
-              <Link to="/cart" className="mobile-link" onClick={()=>setMenuOpen(false)}>
-                <span className="material-icons">shopping_cart</span> Carrito
-                {totalItems > 0 && <span className="cart-counter">{totalItems}</span>}
-              </Link>
-            </div>
+            <>
+              <div className="mobile-overlay" onClick={() => setMenuOpen(false)} />
+              <div className="mobile-menu slide-in">
+                <Link to="/" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                  <span className="material-icons">home</span> Inicio
+                </Link>
+                <Link to="/" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                  <span className="material-icons">category</span> Productos
+                </Link>
+                <Link to="/cotizador" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                  <span className="material-icons">calculate</span> Cotización
+                </Link>
+                <Link to="/cart" className="mobile-link" onClick={()=>setMenuOpen(false)}>
+                  <span className="material-icons">shopping_cart</span> Carrito
+                  {totalItems > 0 && <span className="cart-counter">{totalItems}</span>}
+                </Link>
+              </div>
+            </>
           )}
 
           {/* Actions */}
