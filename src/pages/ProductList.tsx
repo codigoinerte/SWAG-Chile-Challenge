@@ -6,6 +6,7 @@ import { Product } from '../types/Product'
 import './ProductList.css'
 
 const ProductList = () => {
+  const [supplierFilter, setSupplierFilter] = useState('all');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProducts)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
@@ -20,7 +21,7 @@ const ProductList = () => {
   }
 
   // Filter and sort products based on criteria
-  const filterProducts = (category: string, search: string, sort: string) => {
+  const filterProducts = (category: string, search: string, sort: string, supplierFilter:string) => {
     let filtered = [...allProducts]
 
     // Category filter
@@ -53,22 +54,31 @@ const ProductList = () => {
         break
     }
 
+    filtered = filtered.filter((product) => product.supplier === supplierFilter);
+
+    console.log(filtered);
+
     setFilteredProducts(filtered)
   }
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
-    filterProducts(category, searchQuery, sortBy)
+    filterProducts(category, searchQuery, sortBy, supplierFilter)
   }
 
   const handleSearchChange = (search: string) => {
     setSearchQuery(search)
-    filterProducts(selectedCategory, search, sortBy)
+    filterProducts(selectedCategory, search, sortBy, supplierFilter)
   }
 
   const handleSortChange = (sort: string) => {
     setSortBy(sort)
-    filterProducts(selectedCategory, searchQuery, sort)
+    filterProducts(selectedCategory, searchQuery, sort, supplierFilter)
+  }
+
+  const handleSupplierChange = (supplier: string) => {
+    setSupplierFilter(supplier);
+    filterProducts(selectedCategory, searchQuery, sortBy, supplier)
   }
 
   return (
@@ -97,9 +107,11 @@ const ProductList = () => {
 
         {/* Filters */}
         <ProductFilters
+          selectedSupplier={supplierFilter}
           selectedCategory={selectedCategory}
           searchQuery={searchQuery}
           sortBy={sortBy}
+          onSupplierChange={handleSupplierChange}
           onCategoryChange={handleCategoryChange}
           onSearchChange={handleSearchChange}
           onSortChange={handleSortChange}
@@ -117,7 +129,7 @@ const ProductList = () => {
                 onClick={() => {
                   setSearchQuery('')
                   setSelectedCategory('all')
-                  filterProducts('all', '', sortBy)
+                  filterProducts('all', '', sortBy, 'all')
                 }}
               >
                 Ver todos los productos
