@@ -1,12 +1,16 @@
 import { useState } from 'react'
+import { useCartStore } from '../store/cartStore'
 import { Product } from '../types/Product'
 import { FormatPrice } from '../helpers/FormatPrice';
 import './PricingCalculator.css'
 interface PricingCalculatorProps {
-  product: Product
+  product: Product;
+  selectedColor?: string;
+  selectedSize?: string;
 }
 
-const PricingCalculator = ({ product }: PricingCalculatorProps) => {
+const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalculatorProps) => {
+  const { addItem } = useCartStore();
   const [quantity, setQuantity] = useState<number>(1)
   const [selectedBreak, setSelectedBreak] = useState<number>(0)
 
@@ -171,8 +175,8 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
           <button 
             className="btn btn-primary cta1"
             onClick={() => {
-              // Add to cart functionality
-              alert('Función de agregar al carrito por implementar')
+              addItem(product, quantity, selectedColor, selectedSize);
+              alert(`${quantity} ${product.name} se ha(n) añadido al carrito.`);
             }}
           >
             <span className="material-icons">shopping_cart</span>
