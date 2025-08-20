@@ -1,12 +1,15 @@
+
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { products } from '../data/products'
 import { Product } from '../types/Product'
 import PricingCalculator from '../components/PricingCalculator'
+import { useCartStore } from '../store/cartStore' // Importar el store
 import './ProductDetail.css'
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>()
+  const { addItem } = useCartStore() // Obtener la acción para agregar items
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [selectedSize, setSelectedSize] = useState<string>('')
@@ -26,6 +29,13 @@ const ProductDetail = () => {
       }
     }
   }, [id])
+
+  const handleAddToCart = () => {
+    if (product) {
+      addItem(product, quantity, selectedColor, selectedSize);
+      alert(`${quantity} ${product.name} se ha(n) añadido al carrito.`);
+    }
+  };
 
   // Handle loading state
   if (!product) {
@@ -185,7 +195,7 @@ const ProductDetail = () => {
                 <button 
                   className={`btn btn-primary cta1 ${!canAddToCart ? 'disabled' : ''}`}
                   disabled={!canAddToCart}
-                  onClick={() => alert('Función de agregar al carrito por implementar')}
+                  onClick={handleAddToCart} // Conectar la función
                 >
                   <span className="material-icons">shopping_cart</span>
                   {canAddToCart ? 'Agregar al carrito' : 'No disponible'}

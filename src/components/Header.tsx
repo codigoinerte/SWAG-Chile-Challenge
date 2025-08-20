@@ -1,7 +1,12 @@
+
 import { Link } from 'react-router-dom'
+import { useCartStore } from '../store/cartStore'
 import './Header.css'
 
 const Header = () => {
+  const { getTotalItems } = useCartStore();
+  const totalItems = getTotalItems();
+
   return (
     <header className="header">
       <div className="container">
@@ -20,14 +25,19 @@ const Header = () => {
               <span className="material-icons">home</span>
               Catálogo
             </Link>
-            <button className="nav-link l1" onClick={() => alert('Función de carrito por implementar')}>
+            <Link to="/cart" className="nav-link l1">
               <span className="material-icons">shopping_cart</span>
-              Carrito (0)
-            </button>
+              Carrito
+              ({totalItems > 0 && totalItems})
+            </Link>
           </nav>
 
           {/* Actions */}
           <div className="header-actions">
+            <Link to="/cart" className="cart-mobile">
+              <span className="material-icons">shopping_cart</span>             
+              ({totalItems > 0 && totalItems})
+            </Link>
             <button className="btn btn-secondary cta1">
               <span className="material-icons">person</span>
               Iniciar Sesión

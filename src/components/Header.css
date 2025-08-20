@@ -103,9 +103,31 @@
     display: none;
   }
 }
+.cart-mobile{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
 
+    background: white;
+    color: #1a1a1a;
+    border: 1px solid #e2e8f0;
+    padding: 12px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+
+    flex: 1;
+    height: 100%;
+    max-height: 50px;
+}
+.cart-mobile .material-icons{
+    font-size: 0.95rem;
+}
 @media (max-width: 480px) {
   .nav {
     display: none;
+  }
+  .cart-mobile{
+    display: flex;
   }
 }
