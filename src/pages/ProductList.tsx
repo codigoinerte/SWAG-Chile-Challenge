@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductFilters from '../components/ProductFilters'
@@ -16,14 +17,14 @@ interface FilterProducts {
 }
 
 const ProductList = () => {
-  const [supplierFilter, setSupplierFilter] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [supplierFilter, setSupplierFilter] = useState(searchParams.get('supplier') || 'all');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProducts);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('name');
-
-  const [priceFrom, setPriceFrom] = useState(0);
-  const [priceTo, setPriceTo] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'name');
+  const [priceFrom, setPriceFrom] = useState(Number(searchParams.get('priceFrom')) || 0);
+  const [priceTo, setPriceTo] = useState(Number(searchParams.get('priceTo')) || 0);
   const [isLoading, setIsLoading] = useState(false);
 
   /* standarize string to search */
@@ -88,6 +89,15 @@ const ProductList = () => {
       setFilteredProducts(filtered);
       setIsLoading(false);
     }, 500);
+    // Actualizar la URL con los filtros actuales
+    setSearchParams({
+      category,
+      search,
+      sort,
+      supplier: supplierFilter,
+      priceFrom: priceFrom ? String(priceFrom) : '',
+      priceTo: priceTo ? String(priceTo) : ''
+    });
   };
 
   const handleCategoryChange = (category: string) => {
@@ -163,15 +173,14 @@ const ProductList = () => {
   } 
 
   const setReset = () => {
-      filterProducts({
-        category: 'all',
-        search: '',
-        sort: 'sortBy',
-        supplierFilter: 'all',
-        priceFrom: 0,
-        priceTo: 0
-      });
-
+    filterProducts({
+      category: 'all',
+      search: '',
+      sort: 'name',
+      supplierFilter: 'all',
+      priceFrom: 0,
+      priceTo: 0
+    });
     setSupplierFilter('all');
     setSelectedCategory('all');
     setSearchQuery('');
@@ -179,6 +188,18 @@ const ProductList = () => {
     setPriceFrom(0);
     setPriceTo(0);
   }
+  // Sincronizar filtros con la URL al cargar la página
+  useEffect(() => {
+    filterProducts({
+      category: selectedCategory,
+      search: searchQuery,
+      sort: sortBy,
+      supplierFilter,
+      priceFrom,
+      priceTo
+    });
+    // eslint-disable-next-line
+  }, []);
 
   const handleReset = (isReset:boolean) =>  (isReset) && setReset();
 
