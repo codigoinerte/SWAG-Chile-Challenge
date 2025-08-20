@@ -31,8 +31,7 @@ const Header = () => {
             </Link>
             <Link to="/cart" className="nav-link l1">
               <span className="material-icons">shopping_cart</span>
-              Carrito
-              ({totalItems > 0 && <span className="cart-counter">{totalItems}</span>})
+              Carrito (<span className="cart-counter">{totalItems ?? 0}</span>)
             </Link>
           </nav>
 
