@@ -6,7 +6,7 @@ import { getPricingInfoForQuantity } from '../store/cartStore';
 import './QuotePrintable.css';
 
 // Este es el componente que se imprimirá
-export const QuotePrintable = React.forwardRef<HTMLDivElement>((props, ref) => {
+export const QuotePrintable = React.forwardRef<HTMLDivElement>((_, ref) => {
   const { items, companyInfo, getQuoteTotal } = useQuoteStore();
 
   return (
