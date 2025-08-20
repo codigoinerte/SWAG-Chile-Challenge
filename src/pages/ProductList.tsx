@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ProductCard from '../components/ProductCard'
+import LoadingSpinner from '../components/LoadingSpinner';
 import ProductFilters from '../components/ProductFilters'
 import { products as allProducts } from '../data/products'
 import { Product } from '../types/Product'
@@ -23,6 +24,7 @@ const ProductList = () => {
 
   const [priceFrom, setPriceFrom] = useState(0);
   const [priceTo, setPriceTo] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   /* standarize string to search */
   const normalizeString = (str: string) => {
@@ -42,7 +44,8 @@ const ProductList = () => {
       priceTo
    }: FilterProducts) => {
 
-    let filtered = [...allProducts]
+  setIsLoading(true);
+  let filtered = [...allProducts]
 
     // Category filter
     if (category !== 'all') {
@@ -95,7 +98,10 @@ const ProductList = () => {
 
     
 
-    setFilteredProducts(filtered)
+    setTimeout(() => {
+      setFilteredProducts(filtered)
+      setIsLoading(false);
+    }, 500); // Simula retardo de carga
   }
 
   const handleCategoryChange = (category: string) => {
@@ -233,7 +239,9 @@ const ProductList = () => {
 
         {/* Products Grid */}
         <div className="products-section">
-          {filteredProducts.length === 0 ? (
+          {isLoading ? (
+            <LoadingSpinner message="Cargando productos..." />
+          ) : filteredProducts.length === 0 ? (
             <div className="empty-state">
               <span className="material-icons">search_off</span>
               <h3 className="h2">No hay productos</h3>

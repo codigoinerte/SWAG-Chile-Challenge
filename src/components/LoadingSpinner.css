@@ -1,0 +1,21 @@
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0;
+}
+
+.spinner-circle {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #e0e0e0;
+  border-top: 6px solid #1976d2;
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+
+.loading-spinner .h2 {
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+}
