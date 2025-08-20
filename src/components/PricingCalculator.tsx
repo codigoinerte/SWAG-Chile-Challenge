@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useCartStore } from '../store/cartStore'
+import { useQuoteStore } from '../store/quoteStore'
+import { useNavigate } from 'react-router-dom'
 import { Product } from '../types/Product'
 import { FormatPrice } from '../helpers/FormatPrice';
 import './PricingCalculator.css'
@@ -11,6 +13,8 @@ interface PricingCalculatorProps {
 
 const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalculatorProps) => {
   const { addItem } = useCartStore();
+  const { addItem: addQuoteItem } = useQuoteStore();
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState<number>(1)
   const [selectedBreak, setSelectedBreak] = useState<number>(0)
 
@@ -164,8 +168,8 @@ const PricingCalculator = ({ product, selectedColor, selectedSize }: PricingCalc
           <button 
             className="btn btn-secondary cta1"
             onClick={() => {
-              // Handle quote request
-              alert(`Cotización solicitada para ${quantity} unidades de ${product.name}`)
+              addQuoteItem(product, quantity, selectedColor, selectedSize);
+              navigate('/cotizador');
             }}
           >
             <span className="material-icons">email</span>
