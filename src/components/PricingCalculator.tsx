@@ -27,21 +27,40 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
     return applicableBreak.price * qty
   }
 
-  // Calculate discount amount
-  const getDiscount = (qty: number) => {
-    if (!product.priceBreaks || product.priceBreaks.length === 0) {
-      return 0
-    }
+  const getDiscountPercent = ():number => {
+    return product.priceBreaks?.find((_, idx) => idx == selectedBreak)?.discount ?? 0;
+  }
 
-    const baseTotal = product.basePrice * qty
-    const discountedTotal = calculatePrice(qty)
+  // get Max Quantity select
+  const getMaxQuantity = ():number => {
+    if(selectedBreak == 0 || selectedBreak == 1) return selectedBreak + 1;
+    return 3;
+  }
+
+  const onChangeQuantity = (qty:number):void => {
+    if(qty > 10000) return;
     
-    // Calculate savings percentage
-    return ((baseTotal - discountedTotal) / baseTotal) * 100
+    // Update selectedBreak based on quantity input
+    if (product.priceBreaks && product.priceBreaks.length > 0) {
+      let newSelectedBreak = 0;
+      for (let i = 0; i < product.priceBreaks.length; i++) {
+        const minQty = product.priceBreaks[i].minQty;
+        const nextMinQty = product.priceBreaks[i + 1]?.minQty ?? 10000;
+        if (qty >= minQty && qty < nextMinQty) {
+          newSelectedBreak = i;
+          break;
+        }
+      }
+      if (newSelectedBreak !== selectedBreak) {
+        setSelectedBreak(newSelectedBreak);
+      }
+    }
+    
+    setQuantity(qty);
   }
 
   const currentPrice = calculatePrice(quantity)
-  const discountPercent = getDiscount(quantity)
+  const discountPercent = getDiscountPercent()
 
   return (
     <div className="pricing-calculator">
@@ -60,10 +79,10 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
             <input
               type="number"
               value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              onChange={(e) => onChangeQuantity(Math.max(1, parseInt(e.target.value) || 1)) }
               className="quantity-input p1"
-              min="1"
-              max="10000"
+              min={product.priceBreaks?.find((_, idx)=> idx == selectedBreak)?.minQty ?? 1}
+              max={(product.priceBreaks?.find((_, idx)=> idx == getMaxQuantity() )?.minQty ?? 10000)-1}
             />
             <span className="quantity-unit l1">unidades</span>
           </div>
