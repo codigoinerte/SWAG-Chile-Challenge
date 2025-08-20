@@ -1,16 +1,19 @@
 
 import { useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { products } from '../data/products'
 import { Product } from '../types/Product'
 import PricingCalculator from '../components/PricingCalculator'
 import { useCartStore } from '../store/cartStore' // Importar el store
+import { useQuoteStore } from '../store/quoteStore'
 import './ProductDetail.css'
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>()
-  const { addItem } = useCartStore() // Obtener la acción para agregar items
+    const { addItem } = useCartStore() // Obtener la acción para agregar items
+    const { addItem: addQuoteItem } = useQuoteStore();
+    const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null)
   const [selectedColor, setSelectedColor] = useState<string>('')
   const [selectedSize, setSelectedSize] = useState<string>('')
@@ -202,13 +205,19 @@ const ProductDetail = () => {
                   {canAddToCart ? 'Agregar al carrito' : 'No disponible'}
                 </button>
                 
-                <button 
-                  className="btn btn-secondary cta1"
-                  onClick={() => toast('Función de cotización por implementar', {icon: '🛠️'})}
-                >
-                  <span className="material-icons">calculate</span>
-                  Solicitar cotización
-                </button>
+                  <button 
+                    className="btn btn-secondary cta1"
+                    onClick={() => {
+                      if (product) {
+                        addQuoteItem(product, quantity, selectedColor, selectedSize);
+                        toast('¡Cotización añadida! Redirigiendo...', {icon: '📄'});
+                        setTimeout(() => navigate('/cotizador'), 1200);
+                      }
+                    }}
+                  >
+                    <span className="material-icons">calculate</span>
+                    Solicitar cotización
+                  </button>
               </div>
             </div>
           </div>
