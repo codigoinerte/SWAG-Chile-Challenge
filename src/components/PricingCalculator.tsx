@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Product } from '../types/Product'
+import { FormatPrice } from '../helpers/FormatPrice';
 import './PricingCalculator.css'
-
 interface PricingCalculatorProps {
   product: Product
 }
@@ -38,11 +38,6 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
     
     // Calculate savings percentage
     return ((baseTotal - discountedTotal) / baseTotal) * 100
-  }
-
-  // Format price display
-  const formatPrice = (price: number) => {
-    return `$${price.toLocaleString()}` // Should be CLP formatting
   }
 
   const currentPrice = calculatePrice(quantity)
@@ -96,7 +91,7 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
                       {priceBreak.minQty}+ unidades
                     </div>
                     <div className="break-price p1-medium">
-                      {formatPrice(priceBreak.price)}
+                      {FormatPrice(priceBreak.price)}
                     </div>
                     {priceBreak.discount && (
                       <div className="break-discount l1">
@@ -115,7 +110,7 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
           <div className="summary-row">
             <span className="summary-label p1">Precio unitario:</span>
             <span className="summary-value p1-medium">
-              {formatPrice(calculatePrice(quantity) / quantity)}
+              {FormatPrice(calculatePrice(quantity) / quantity)}
             </span>
           </div>
           
@@ -136,7 +131,7 @@ const PricingCalculator = ({ product }: PricingCalculatorProps) => {
           <div className="summary-row total-row">
             <span className="summary-label p1-medium">Total:</span>
             <span className="summary-value total-value h2">
-              {formatPrice(currentPrice)}
+              {FormatPrice(currentPrice)}
             </span>
           </div>
         </div>

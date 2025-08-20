@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Product } from '../types/Product'
+import { FormatPrice } from '../helpers/FormatPrice';
 import './ProductCard.css'
 
 interface ProductCardProps {
@@ -20,11 +21,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
       default:
         return null
     }
-  }
-
-  // Format price for display
-  const formatPrice = (price: number) => {
-    return price.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })
   }
 
   // Check stock availability
@@ -107,10 +103,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Product Footer */}
       <div className="product-footer">
         <div className="price-section">
-          <div className="current-price p1-medium">{formatPrice(product.basePrice)}</div>
+          <div className="current-price p1-medium">{FormatPrice(product.basePrice)}</div>
           {getDiscountPrice() && (
             <div className="discount-info">
-              <span className="discount-price l1">{formatPrice(getDiscountPrice()!)}</span>
+              <span className="discount-price l1">{FormatPrice(getDiscountPrice()!)}</span>
               <span className="discount-label l1">desde 50 unidades</span>
             </div>
           )}
